@@ -1,0 +1,44 @@
+[
+    {
+        "tipo": "producto",
+        "codigo": "001",
+        "nombre": "Sopa de camaron",
+        "categoria": "sopa",
+        "precio": 3.5,
+        "stock": 3
+    },
+    {
+        "tipo": "producto",
+        "codigo": "002",
+        "nombre": "arroz marinero",
+        "categoria": "plato fuerte",
+        "precio": 6.0,
+        "stock": 6
+    },
+    {
+        "tipo": "producto",
+        "codigo": "003",
+        "nombre": "Esalada de col",
+        "categoria": "esalada",
+        "precio": 2.0,
+        "stock": 2
+    },
+    {
+        "tipo": "bebida",
+        "codigo": "004",
+        "nombre": "coca cola",
+        "categoria": "gaseosa",
+        "precio": 1.0,
+        "stock": 5,
+        "tamano": "100 ml"
+    },
+    {
+        "tipo": "bebida",
+        "codigo": "005",
+        "nombre": "jugo de mora",
+        "categoria": "jugo natural",
+        "precio": 3.0,
+        "stock": 6,
+        "tamano": "grande"
+    }
+]
