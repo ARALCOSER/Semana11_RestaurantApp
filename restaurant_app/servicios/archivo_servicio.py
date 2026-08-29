@@ -6,8 +6,8 @@ from modelos.bebida import Bebida
 from modelos.cliente import Cliente
 from modelos.venta import Venta
 
-# Relaciona el campo "tipo" guardado en el JSON con la clase que debe reconstruirse. Si en el futuro se agrega
-# un nuevo tipo de producto (por ejemplo Postre), bastaria con registrar su clase aqui (principio OCP).
+# Relaciona el campo "tipo" guardado en el JSON con la clase que debe reconstruirse. Si en el futuro se agrega un nuevo tipo de producto 
+# (por ejemplo Postre), bastaria con registrar su clase aqui (principio OCP).
 TIPOS_PRODUCTO: dict[str, type[Producto]] = {
     Producto.TIPO: Producto,
     Bebida.TIPO: Bebida,
@@ -16,13 +16,11 @@ TIPOS_PRODUCTO: dict[str, type[Producto]] = {
 
 class ArchivoServicio:
     """
-    Servicio encargado de leer y guardar los datos del restaurante en formato JSON, utilizando with open(),
-    json.load() y json.dump(). No conoce nada sobre el menu ni sobre la logica de negocio del restaurante:
-    su unica responsabilidad es la persistencia (SRP).
+    Servicio encargado de leer y guardar los datos del restaurante en formato JSON, utilizando with open(), json.load() y json.dump(). 
+    No conoce nada sobre el menu ni sobre la logica de negocio del restaurante: su unica responsabilidad es la persistencia (SRP).
 
-    MEJORA SEMANA 11: ademas de productos.json (ya existente desde la Semana 10), ahora centraliza tambien
-    la persistencia de usuarios.json (clientes) y ventas.json (relacion Usuario-Producto), todos dentro de
-    una misma carpeta "datos".
+    MEJORA SEMANA 11: ademas de productos.json (ya existente desde la Semana 10), ahora centraliza tambien la persistencia de usuarios.json 
+    (clientes) y ventas.json (relacion Usuario-Producto), todos dentro de una misma carpeta "datos".
     """
 
     def __init__(self, ruta_datos: str = "datos") -> None:
@@ -36,8 +34,8 @@ class ArchivoServicio:
     # -----------------------------------------------------------------
     def cargar_productos(self) -> list[Producto]:
         """
-        Lee datos/productos.json y reconstruye la coleccion de objetos Producto (y Bebida, cuando corresponda).
-        Controla de forma especifica los problemas que puede presentar el archivo, sin detener la aplicacion.
+        Lee datos/productos.json y reconstruye la coleccion de objetos Producto (y Bebida, cuando corresponda). Controla de forma especifica 
+        los problemas que puede presentar el archivo, sin detener la aplicacion.
         """
         datos = self._leer_lista(self._ruta_productos, "productos")
         productos: list[Producto] = []
@@ -62,19 +60,17 @@ class ArchivoServicio:
 
     def guardar_productos(self, productos: list[Producto]) -> bool:
         """
-        Convierte la coleccion de objetos Producto/Bebida a una lista de diccionarios
-        (mediante convertir_a_diccionario(), que ahora incluye el stock) y la guarda en
-        datos/productos.json con json.dump().
+        Convierte la coleccion de objetos Producto/Bebida a una lista de diccionarios (mediante convertir_a_diccionario(), que ahora incluye el 
+        stock) y la guarda en datos/productos.json con json.dump().
         """
         datos = [producto.convertir_a_diccionario() for producto in productos]
         return self._guardar_lista(self._ruta_productos, datos, "productos")
 
     def _reconstruir_producto(self, registro: dict) -> Producto:
         """
-        Reconstruye un objeto Producto o Bebida a partir de un registro leido desde JSON, usando el campo
-        "tipo" para elegir la clase correcta. Puede lanzar KeyError (clave faltante) o ValueError (dato
-        invalido, propagado desde los setters de Producto/Bebida); ambas excepciones son controladas por
-        quien llama a este metodo (cargar_productos()).
+        Reconstruye un objeto Producto o Bebida a partir de un registro leido desde JSON, usando el campo "tipo" para elegir la clase correcta. 
+        Puede lanzar KeyError (clave faltante) o ValueError (dato invalido, propagado desde los setters de Producto/Bebida); ambas excepciones 
+        son controladas por quien llama a este metodo (cargar_productos()).
         """
         tipo = registro.get("tipo", Producto.TIPO)
         clase_producto = TIPOS_PRODUCTO.get(tipo, Producto)
@@ -101,8 +97,8 @@ class ArchivoServicio:
     # -----------------------------------------------------------------
     def cargar_clientes(self) -> list[Cliente]:
         """
-        MEJORA SEMANA 11: completa la persistencia de clientes, que en la Semana 10 solo
-        se administraban en memoria. Lee usuarios.json y reconstruye objetos Cliente.
+        MEJORA SEMANA 11: completa la persistencia de clientes, que en la Semana 10 solo se administraban en memoria. Lee usuarios.json y 
+        reconstruye objetos Cliente.
         """
         datos = self._leer_lista(self._ruta_usuarios, "usuarios")
         clientes: list[Cliente] = []
@@ -140,8 +136,8 @@ class ArchivoServicio:
     # -----------------------------------------------------------------
     def cargar_ventas(self) -> list[Venta]:
         """
-        MEJORA SEMANA 11: reconstruye las ventas ya realizadas para que, al reiniciar el
-        programa, la consulta de ventas por usuario siga funcionando sobre datos reales.
+        MEJORA SEMANA 11: reconstruye las ventas ya realizadas para que, al reiniciar el programa, la consulta de ventas por usuario siga 
+        funcionando sobre datos reales.
         """
         datos = self._leer_lista(self._ruta_ventas, "ventas")
         ventas: list[Venta] = []
@@ -179,8 +175,7 @@ class ArchivoServicio:
     # -----------------------------------------------------------------
     def _leer_lista(self, ruta: Path, nombre: str) -> list:
         """
-        Controla los problemas que puede presentar cualquiera de los tres archivos JSON,
-        sin detener la aplicacion:
+        Controla los problemas que puede presentar cualquiera de los tres archivos JSON, sin detener la aplicacion:
         - FileNotFoundError: el archivo todavia no existe (primer inicio) -> lista vacia.
         - json.JSONDecodeError: el contenido no es un JSON valido -> se informa y lista vacia.
         - PermissionError: no hay permisos suficientes para leer el archivo.

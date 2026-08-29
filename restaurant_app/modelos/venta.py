@@ -1,13 +1,11 @@
 class Venta:
     """
-    MEJORA SEMANA 11: nuevo modelo que representa la relacion entre un Usuario (en este proyecto,
-    Cliente) y un Producto vendido. Una venta no es solo restar stock: tambien queda registrada como
-    un objeto propio dentro de una coleccion (self._ventas en Restaurante), lo que permite luego
-    recorrerla, compararla y filtrarla (por ejemplo, para consultar las ventas de un cliente).
+    MEJORA SEMANA 11: nuevo modelo que representa la relacion entre un Usuario (en este proyecto, Cliente) y un Producto vendido. Una venta 
+    no es solo restar stock: tambien queda registrada como un objeto propio dentro de una coleccion (self._ventas en Restaurante), lo que 
+    permite luego recorrerla, compararla y filtrarla (por ejemplo, para consultar las ventas de un cliente).
 
-    PRINCIPIO SRP: su unica responsabilidad es representar y validar los datos de la operacion de venta
-    ya realizada (usuario_id, producto_codigo y cantidad). No conoce nada sobre el stock del producto,
-    ni sobre como se guarda en ventas.json: eso lo resuelven Restaurante y ArchivoServicio.
+    PRINCIPIO SRP: su unica responsabilidad es representar y validar los datos de la operacion de venta ya realizada (usuario_id, producto_codigo 
+    y cantidad). No conoce nada sobre el stock del producto, ni sobre como se guarda en ventas.json: eso lo resuelven Restaurante y ArchivoServicio.
     """
 
     def __init__(self, usuario_id: str, producto_codigo: str, cantidad: int) -> None:
@@ -51,8 +49,7 @@ class Venta:
 
     def convertir_a_diccionario(self) -> dict:
         """
-        Permite que ArchivoServicio guarde la venta en ventas.json mediante json.dump(),
-        conservando la relacion Usuario-Producto realizada.
+        Permite que ArchivoServicio guarde la venta en ventas.json mediante json.dump(), conservando la relacion Usuario-Producto realizada.
         """
         return {
             "usuario_id": self.usuario_id,

@@ -1,20 +1,18 @@
 class Producto:
     """
-    Clase base que representa un producto general del restaurante. Define los atributos obligatorios de
-    Producto (codigo, nombre, categoria, precio y stock) y expone metodos para acceder y modificar dichos
-    atributos de forma controlada.
-    PRINCIPIO SRP (Responsabilidad Unica): su unica responsabilidad es modelar y exponer los datos propios
-    del producto. No conoce nada sobre el registro de productos, la persistencia en archivos ni la
-    interaccion por consola. PRINCIPIO OCP (Abierto/Cerrado): permite extender el catalogo a nuevos
-    tipos de productos (como Bebida) mediante herencia, sin modificar la logica ya existente del servicio
-    Restaurante ni de ArchivoServicio.
+    Clase base que representa un producto general del restaurante. Define los atributos obligatorios de Producto (codigo, nombre, categoria,
+    precio y stock) y expone metodos para acceder y modificar dichos atributos de forma controlada.
+    PRINCIPIO SRP (Responsabilidad Unica): su unica responsabilidad es modelar y exponer los datos propios del producto. No conoce nada sobre 
+    el registro de productos, la persistencia en archivos ni la interaccion por consola. PRINCIPIO OCP (Abierto/Cerrado): permite extender 
+    el catalogo a nuevos tipos de productos (como Bebida) mediante herencia, sin modificar la logica ya existente del servicio Restaurante ni 
+    de ArchivoServicio.
 
-    MEJORA SEMANA 11: se incorpora el atributo "stock" para poder representar la cantidad disponible de
-    cada producto y sostener la nueva operacion de venta (Usuario/Cliente + Producto -> Venta).
+    MEJORA SEMANA 11: se incorpora el atributo "stock" para poder representar la cantidad disponible de cada producto y sostener la nueva 
+    operacion de venta (Cliente + Producto -> Venta).
     """
 
-    # Identifica el tipo de producto dentro del JSON para poder reconstruirlo
-    # correctamente (Producto o Bebida) al cargar datos/productos.json.
+    # Identifica el tipo de producto dentro del JSON para poder reconstruirlo correctamente (Producto o Bebida) al cargar datos/productos.json.
+
     TIPO: str = "producto"
 
     def __init__(
@@ -25,8 +23,7 @@ class Producto:
         precio: float,
         stock: int = 0,
     ) -> None:
-        # Uso de anotaciones de tipos en el constructor y encapsulamiento mediante
-        # propiedades (atributos protegidos con prefijo "_").
+        # Uso de anotaciones de tipos en el constructor y encapsulamiento mediante propiedades (atributos protegidos con prefijo "_").
         self.codigo = codigo
         self.nombre = nombre
         self.categoria = categoria
@@ -101,10 +98,8 @@ class Producto:
     # ---------------------------------------------------------------
     def vender(self, cantidad: int) -> bool:
         """
-        MEJORA SEMANA 11: disminuye el stock cuando se realiza una venta valida.
-        No conoce nada sobre Cliente ni sobre Venta: unicamente controla su propio
-        estado interno (PRINCIPIO SRP), la relacion Usuario-Producto la administra
-        el servicio Restaurante.
+        MEJORA SEMANA 11: disminuye el stock cuando se realiza una venta valida. No conoce nada sobre Cliente ni sobre Venta: unicamente 
+        controla su propio estado interno (PRINCIPIO SRP), la relacion Usuario-Producto la administra el servicio Restaurante.
         """
         if cantidad <= 0 or self._stock < cantidad:
             return False
@@ -113,9 +108,9 @@ class Producto:
 
     def mostrar_informacion(self) -> str:
         """
-        Define el comportamiento comun para presentar la informacion de cualquier producto. PRINCIPIO
-        LSP (Sustitucion de Liskov): cualquier clase hija (por ejemplo Bebida) puede sustituir a Producto
-        aqui sin alterar el comportamiento esperado por quien llama al metodo.
+        Define el comportamiento comun para presentar la informacion de cualquier producto. PRINCIPIO LSP (Sustitucion de Liskov): 
+        cualquier clase hija (por ejemplo Bebida) puede sustituir a Producto aqui sin alterar el comportamiento esperado por quien llama 
+        al metodo.
         """
         return (
             f"[Producto] Codigo: {self.codigo} | Nombre: {self.nombre} | "
@@ -125,9 +120,9 @@ class Producto:
 
     def convertir_a_diccionario(self) -> dict:
         """
-        Convierte el producto en una estructura compatible con JSON (dict) para que ArchivoServicio pueda
-        guardarlo mediante json.dump(). Se incluye el campo "tipo" para que, al reconstruir la coleccion
-        con json.load(), cada registro pueda volver a convertirse en el objeto correcto (Producto o Bebida).
+        Convierte el producto en una estructura compatible con JSON (dict) para que ArchivoServicio pueda guardarlo mediante json.dump(). 
+        Se incluye el campo "tipo" para que, al reconstruir la coleccion con json.load(), cada registro pueda volver a convertirse en el 
+        objeto correcto (Producto o Bebida).
         """
         return {
             "tipo": self.TIPO,

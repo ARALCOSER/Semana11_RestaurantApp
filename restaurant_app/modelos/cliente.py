@@ -1,19 +1,16 @@
 class Cliente:
     """
-    Representa a un cliente registrado en el restaurante. PRINCIPIO SRP (Responsabilidad Unica): su unica
-    responsabilidad es modelar y exponer los datos propios del cliente (identificacion, nombre y correo).
-    No conoce nada sobre el menu, el registro de productos ni la interaccion por consola.
-
-    NOTA SEMANA 11: en la actividad de esta semana el rol de "Usuario" que se relaciona con Producto
-    mediante Venta lo cumple esta misma clase Cliente (ya existente desde semanas anteriores), para
-    conservar las funcionalidades previas del proyecto sin duplicar entidades equivalentes.
+    Representa a un cliente registrado en el restaurante. PRINCIPIO SRP (Responsabilidad Unica): su unica responsabilidad es modelar y 
+    exponer los datos propios del cliente (identificacion, nombre y correo). No conoce nada sobre el menu, el registro de productos ni 
+    la interaccion por consola.En esta semana el rol de "Usuario" que se relaciona con Producto mediante Venta lo cumple esta misma 
+    clase Cliente (ya existente desde semanas anteriores), para conservar las funcionalidades previas del proyecto sin duplicar entidades 
+    equivalentes.
     """
 
     def __init__(self, identificacion: str, nombre: str, correo: str) -> None:
-        # Uso de anotaciones de tipos de datos en el constructor y encapsulamiento
-        # mediante atributos protegidos. MEJORA SEMANA 11: se agregan validaciones
-        # basicas (ValueError) para que el cliente siempre quede en un estado valido,
-        # tanto si se crea desde consola como si se reconstruye desde usuarios.json.
+        # Uso de anotaciones de tipos de datos en el constructor y encapsulamiento mediante atributos protegidos. 
+        # MEJORA SEMANA 11: se agregan validaciones basicas (ValueError) para que el cliente siempre quede en un estado valido, tanto si 
+        # se crea desde consola como si se reconstruye desde usuarios.json.
         if not identificacion or not identificacion.strip():
             raise ValueError("La identificacion del cliente no puede estar vacia.")
         if not nombre or not nombre.strip():
@@ -25,8 +22,7 @@ class Cliente:
         self._nombre = nombre.strip()
         self._correo = correo.strip()
 
-    # Propiedades (@property) para exponer la informacion de forma controlada,
-    # sin permitir su modificacion directa desde fuera de la clase.
+    # Propiedades (@property) para exponer la informacion de forma controlada, sin permitir su modificacion directa desde fuera de la clase.
     @property
     def identificacion(self) -> str:
         return self._identificacion
@@ -47,9 +43,8 @@ class Cliente:
 
     def convertir_a_diccionario(self) -> dict:
         """
-        MEJORA SEMANA 11: permite que ArchivoServicio guarde al cliente en usuarios.json
-        mediante json.dump(), completando la persistencia que en la Semana 10 todavia
-        no existia para esta entidad.
+        MEJORA SEMANA 11: permite que ArchivoServicio guarde al cliente en usuarios.json mediante json.dump(), completando la persistencia que en 
+        la Semana anterior todavia no existia para esta entidad.
         """
         return {
             "identificacion": self.identificacion,

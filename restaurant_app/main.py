@@ -480,10 +480,9 @@ def main() -> None:
     else:
         print("No se encontraron ventas guardadas. Se inicia con la lista vacia.")
 
-    # DICCIONARIO (dict): utilizado cuando existe una relacion clara de clave -> valor. Asocia las opciones
-    # del menu con las funciones correspondientes. La clave es el numero de opcion escrito por consola
-    # (coincide con el primer valor de cada tupla en OPCIONES_MENU); el valor es la funcion que ejecuta
-    # esa accion. Esto reemplaza una larga cadena de if/elif por una busqueda directa en el diccionario.
+    # DICCIONARIO (dict): utilizado cuando existe una relacion clara de clave -> valor. Asocia las opciones del menu con las funciones 
+    # correspondientes. La clave es el numero de opcion escrito por consola (coincide con el primer valor de cada tupla en OPCIONES_MENU);
+    #  el valor es la funcion que ejecuta esa accion. Esto reemplaza una larga cadena de if/elif por una busqueda directa en el diccionario.
     acciones: dict[str, Callable[[], None]] = {
         "1": lambda: registrar_producto(restaurante, archivo_servicio),
         "2": lambda: registrar_bebida(restaurante, archivo_servicio),
