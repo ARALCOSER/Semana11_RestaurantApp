@@ -12,12 +12,12 @@ from modelos.cliente import Cliente
 from servicios.restaurante import Restaurante
 from servicios.archivo_servicio import ArchivoServicio
 
-# TUPLA (tuple): utilizada para representar informacion que debe mantenerse estable durante la ejecucion, por ejemplo las opciones 
-# disponibles del menu principal. OPCIONES_MENU es una tupla de tuplas (numero, descripcion): son datos "quemados" definidos por el 
-# programador. El contenido del menu en si no se puede agregar, eliminar ni modificar mientras el programa esta en ejecucion, 
-# porque una tupla es inmutable.
-#MEJORA SEMANA 11: se agregan las opciones 10 (Vender producto) y 11 (Consultar ventas de un cliente).
-
+# TUPLA (tuple): utilizada para representar informacion que debe mantenerse estable durante la ejecucion,
+# por ejemplo las opciones disponibles del menu principal. OPCIONES_MENU es una tupla de tuplas (numero,
+# descripcion): son datos "quemados" definidos por el programador. El contenido del menu en si no se puede
+# agregar, eliminar ni modificar mientras el programa esta en ejecucion, porque una tupla es inmutable.
+#
+# MEJORA SEMANA 11: se agregan las opciones 10 (Vender producto) y 11 (Consultar ventas de un cliente).
 OPCIONES_MENU: tuple[tuple[str, str], ...] = (
     ("1", "Registrar producto"),
     ("2", "Registrar bebida"),
@@ -33,15 +33,15 @@ OPCIONES_MENU: tuple[tuple[str, str], ...] = (
     ("0", "Salir"),
 )
 
-# TUPLA (tuple): igual que OPCIONES_MENU, guarda datos fijos (los numeros de opcion despues de los cuales se imprime una linea separadora) 
-# que tampoco deben modificarse en tiempo de ejecucion.
-
+# TUPLA (tuple): igual que OPCIONES_MENU, guarda datos fijos (los numeros de opcion despues de los cuales se
+# imprime una linea separadora) que tampoco deben modificarse en tiempo de ejecucion.
 SEPARADORES_MENU: tuple[str, ...] = ("2", "6", "8", "9")
 
 
 def mostrar_menu() -> None:
     """
-    Imprime el menu recorriendo la TUPLA OPCIONES_MENU con un for, en lugar de repetir multiples print() sueltos por cada opcion.
+    Imprime el menu recorriendo la TUPLA OPCIONES_MENU con un for, en lugar de
+    repetir multiples print() sueltos por cada opcion.
     """
     print("\n==================================================")
     print("|        SISTEMA DE RESTAURANTE VACA & VACO      |")
@@ -79,7 +79,8 @@ def _solicitar_precio() -> float:
 
 
 def _solicitar_entero(mensaje: str, permitir_cero: bool = True) -> int:
-    # MEJORA SEMANA 11: validacion generica para leer enteros (stock, cantidad a vender), evitando que un valor invalido detenga el programa.
+    # MEJORA SEMANA 11: validacion generica para leer enteros (stock, cantidad a vender),
+    # evitando que un valor invalido detenga el programa.
     while True:
         texto = input(mensaje).strip()
         if not validar_campo_vacio(texto, "Cantidad"):
@@ -99,8 +100,9 @@ def guardar_productos(
     archivo_servicio: ArchivoServicio, restaurante: Restaurante
 ) -> None:
     """
-    Solicita a ArchivoServicio que persista el estado actual de la coleccion de productos. Se llama despues de registrar, actualizar, 
-    eliminar o vender un producto correctamente. main.py no abre el archivo: solo coordina el momento en que debe guardarse.
+    Solicita a ArchivoServicio que persista el estado actual de la coleccion de productos. Se llama despues
+    de registrar, actualizar, eliminar o vender un producto correctamente. main.py no abre el archivo:
+    solo coordina el momento en que debe guardarse.
     """
     guardado = archivo_servicio.guardar_productos(restaurante.obtener_productos())
     if not guardado:
@@ -111,7 +113,6 @@ def guardar_clientes(
     archivo_servicio: ArchivoServicio, restaurante: Restaurante
 ) -> None:
     # MEJORA SEMANA 11: guardado automatico despues de registrar un cliente.
-
     guardado = archivo_servicio.guardar_clientes(restaurante.obtener_clientes())
     if not guardado:
         print("Advertencia: los cambios de clientes no pudieron guardarse en el archivo.")
@@ -148,9 +149,8 @@ def registrar_producto(
     # MEJORA SEMANA 11: todo producto ahora se registra con un stock inicial disponible.
     stock = _solicitar_entero("Stock disponible: ")
     try:
-        # Creacion del objeto Producto a partir de los datos ingresados y delegacion al servicio Restaurante (main.py no administra la 
-        # lista de productos directamente).
-
+        # Creacion del objeto Producto a partir de los datos ingresados y delegacion al servicio Restaurante
+        # (main.py no administra la lista de productos directamente).
         producto = Producto(codigo, nombre, categoria, precio, stock)
     except ValueError as error:
         print(f"Error: {error}")
@@ -204,8 +204,8 @@ def buscar_producto(restaurante: Restaurante) -> None:
         codigo = input("Codigo del producto a buscar: ").strip()
         if validar_campo_vacio(codigo, "Codigo"):
             break
-    # Re striccion de arquitectura: main.py NO recorre la lista interna del servicio; delega la busqueda al metodo 
-    # buscar_producto_por_codigo() de Restaurante.
+    # Restriccion de arquitectura: main.py NO recorre la lista interna del servicio; delega la busqueda al
+    # metodo buscar_producto_por_codigo() de Restaurante.
     producto = restaurante.buscar_producto_por_codigo(codigo)
     if producto is None:
         print(f"No se encontro ningun producto con el codigo {codigo}.")
@@ -255,8 +255,8 @@ def actualizar_producto(
             return
 
     try:
-        # Restriccion de arquitectura: la actualizacion real del producto ocurre dentro de Restaurante.actualizar_producto, no 
-        # accediendo directamente a la lista interna del servicio.
+        # Restriccion de arquitectura: la actualizacion real del producto ocurre dentro de
+        # Restaurante.actualizar_producto, no accediendo directamente a la lista interna del servicio.
         mensaje = restaurante.actualizar_producto(
             codigo,
             nombre=nombre or None,
@@ -290,8 +290,8 @@ def registrar_cliente(
     restaurante: Restaurante, archivo_servicio: ArchivoServicio
 ) -> None:
     print("\n--- REGISTRO DE CLIENTE ---")
-    # Validacion de formato (10 digitos numericos) para evitar que una identificacion mal escrita detenga el programa o ensucie la 
-    # coleccion de clientes.
+    # Validacion de formato (10 digitos numericos) para evitar que una identificacion mal escrita detenga
+    # el programa o ensucie la coleccion de clientes.
     while True:
         identificacion = input("Cedula de identidad: ").strip()
         if not validar_campo_vacio(identificacion, "Identificacion"):
@@ -300,7 +300,7 @@ def registrar_cliente(
             print(
                 "Error: La identificacion (cedula) debe contener exactamente "
                 "10 digitos numericos."
-             )
+            )
             continue
         break
 
@@ -320,7 +320,8 @@ def registrar_cliente(
         break
 
     try:
-        # Creacion del objeto Cliente a partir de datos ingresados por consola y delegacion al servicio Restaurante.
+        # Creacion del objeto Cliente a partir de datos ingresados por consola y delegacion al
+        # servicio Restaurante.
         cliente = Cliente(identificacion, nombre, correo)
     except ValueError as error:
         print(f"Error: {error}")
@@ -337,8 +338,8 @@ def vender_producto(
     restaurante: Restaurante, archivo_servicio: ArchivoServicio
 ) -> None:
     """
-    MEJORA SEMANA 11: opcion del menu para registrar la venta de un producto a un cliente. Aqui se demuestra la relacion Usuario 
-    (Cliente) + Producto -> Venta.
+    MEJORA SEMANA 11: opcion del menu para registrar la venta de un producto a un cliente.
+    Aqui se demuestra la relacion Usuario (Cliente) + Producto -> Venta.
     """
     print("\n--- VENTA DE PRODUCTO ---")
     while True:
@@ -350,8 +351,8 @@ def vender_producto(
         if validar_campo_vacio(codigo_producto, "Codigo"):
             break
 
-    # main.py solo consulta para dar mensajes claros al usuario; la regla final de negocio siempre se valida (y se aplica) 
-    # dentro de Restaurante.vender_producto().
+    # main.py solo consulta para dar mensajes claros al usuario; la regla final de negocio
+    # siempre se valida (y se aplica) dentro de Restaurante.vender_producto().
     cliente = restaurante.buscar_cliente_por_identificacion(identificacion_cliente)
     if cliente is None:
         print("Error: No existe un cliente con esa identificacion.")
@@ -375,7 +376,8 @@ def vender_producto(
             f"Venta registrada correctamente para {cliente.nombre}. "
             f"Stock actual de {producto.nombre}: {producto.stock}"
         )
-        # Una sola operacion modifica dos colecciones: se guardan la nueva venta y el nuevo stock del producto.
+        # Una sola operacion modifica dos colecciones: se guardan la nueva venta y el
+        # nuevo stock del producto.
         guardar_ventas(archivo_servicio, restaurante)
         guardar_productos(archivo_servicio, restaurante)
     else:
@@ -384,8 +386,8 @@ def vender_producto(
 
 def consultar_ventas_cliente(restaurante: Restaurante) -> None:
     """
-    MEJORA SEMANA 11: opcion del menu para consultar, mediante recorrido y filtrado de la coleccion de ventas, las ventas realizadas 
-    por un cliente especifico.
+    MEJORA SEMANA 11: opcion del menu para consultar, mediante recorrido y filtrado de la
+    coleccion de ventas, las ventas realizadas por un cliente especifico.
     """
     print("\n--- VENTAS DE UN CLIENTE ---")
     while True:
@@ -435,9 +437,9 @@ def mostrar_clientes(restaurante: Restaurante) -> None:
 
 
 def mostrar_categorias(restaurante: Restaurante) -> None:
-    # El servicio retorna un CONJUNTO (set) de categorias unicas; aqui solo se ordena con sorted() para presentarlo de forma 
-    # legible, sin alterar su naturaleza de valores sin duplicados.
-
+    # El servicio retorna un CONJUNTO (set) de categorias unicas; aqui solo se
+    # ordena con sorted() para presentarlo de forma legible, sin alterar su
+    # naturaleza de valores sin duplicados.
     categorias = restaurante.obtener_categorias_unicas()
     if not categorias:
         print("\nNo existen categorias registradas todavia.")
@@ -448,10 +450,10 @@ def mostrar_categorias(restaurante: Restaurante) -> None:
 
 
 def main() -> None:
-    # Se crea ArchivoServicio apuntando a la carpeta "datos" (ruta relativa a este archivo, para que funcione sin importar desde 
-    # donde se ejecute python) y se cargan productos, clientes y ventas guardados ANTES de crear el menu. Los diccionarios leidos 
-    # de cada JSON ya llegan convertidos en objetos (Producto/Bebida, Cliente, Venta) gracias a ArchivoServicio.
-
+    # Se crea ArchivoServicio apuntando a la carpeta "datos" (ruta relativa a este archivo, para que
+    # funcione sin importar desde donde se ejecute python) y se cargan productos, clientes y ventas
+    # guardados ANTES de crear el menu. Los diccionarios leidos de cada JSON ya llegan convertidos en
+    # objetos (Producto/Bebida, Cliente, Venta) gracias a ArchivoServicio.
     ruta_datos = Path(__file__).resolve().parent / "datos"
     archivo_servicio = ArchivoServicio(str(ruta_datos))
 
@@ -459,9 +461,8 @@ def main() -> None:
     clientes_guardados = archivo_servicio.cargar_clientes()
     ventas_guardadas = archivo_servicio.cargar_ventas()
 
-    # Restriccion de arquitectura: "main.py no administra colecciones directamente." Toda la logica interna de almacenamiento 
-    # (listas y conjunto de categorias) esta delegada a la instancia de Restaurante.
-
+    # Restriccion de arquitectura: "main.py no administra colecciones directamente." Toda la logica
+    # interna de almacenamiento (listas y conjunto de categorias) esta delegada a la instancia de Restaurante.
     restaurante = Restaurante(productos_guardados, clientes_guardados, ventas_guardadas)
 
     if productos_guardados:
@@ -479,10 +480,10 @@ def main() -> None:
     else:
         print("No se encontraron ventas guardadas. Se inicia con la lista vacia.")
 
-    # DICCIONARIO (dict): utilizado cuando existe una relacion clara de clave -> valor. Asocia las opciones del menu con las funciones 
-    # correspondientes. La clave es el numero de opcion escrito por consola (coincide con el primer valor de cada tupla en OPCIONES_MENU); 
-    # el valor es la funcion que ejecuta esa accion. Esto reemplaza una larga cadena de if/elif por una busqueda directa en el diccionario.
-
+    # DICCIONARIO (dict): utilizado cuando existe una relacion clara de clave -> valor. Asocia las opciones
+    # del menu con las funciones correspondientes. La clave es el numero de opcion escrito por consola
+    # (coincide con el primer valor de cada tupla en OPCIONES_MENU); el valor es la funcion que ejecuta
+    # esa accion. Esto reemplaza una larga cadena de if/elif por una busqueda directa en el diccionario.
     acciones: dict[str, Callable[[], None]] = {
         "1": lambda: registrar_producto(restaurante, archivo_servicio),
         "2": lambda: registrar_bebida(restaurante, archivo_servicio),
@@ -497,7 +498,8 @@ def main() -> None:
         "11": lambda: consultar_ventas_cliente(restaurante),
     }
 
-    # Implementa un menu interactivo ejecutado desde main.py, manteniendo el programa en ejecucion hasta que se seleccione la opcion de salir.
+    # Implementa un menu interactivo ejecutado desde main.py, manteniendo el
+    # programa en ejecucion hasta que se seleccione la opcion de salir.
     while True:
         mostrar_menu()
         opcion = input("Por favor seleccione una opcion -> : ").strip()
@@ -505,9 +507,8 @@ def main() -> None:
             print("\nHas finalizado correctamente.")
             print()
             break
-        # USO DEL DICCIONARIO: dict.get() busca la funcion asociada a la opcion elegida; si la clave no existe, se informa un error sin 
-        # detener el programa.
-        
+        # USO DEL DICCIONARIO: dict.get() busca la funcion asociada a la opcion elegida; si la clave no
+        # existe, se informa un error sin detener el programa.
         accion = acciones.get(opcion)
         if accion is None:
             print("\nError: Seleccione una opcion valida del menu.")
@@ -517,5 +518,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
 

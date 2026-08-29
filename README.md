@@ -246,4 +246,3 @@ larga cadena de `if`/`elif`.
 - Se verificó que `main.py` nunca recorre ni modifica directamente `self._productos`, `self._clientes` ni
   `self._ventas`: toda la lógica de negocio permanece dentro de `Restaurante`.
 
-

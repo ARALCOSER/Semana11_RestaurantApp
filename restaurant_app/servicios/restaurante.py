@@ -5,13 +5,15 @@ from modelos.venta import Venta
 
 class Restaurante:
     """
-    Servicio encargado de administrar las colecciones de productos, clientes y ventas, junto con las operaciones de registro, busqueda, 
-    actualizacion, eliminacion, listado y venta del sistema. PRINCIPIO SRP: maneja exclusivamente la logica de almacenamiento y 
-    validacion en memoria, cumpliendo con la restriccion de NO interactuar con la consola (sin inputs ni prints) y de NO leer/escribir 
-    archivos directamente (eso es responsabilidad de ArchivoServicio).
+    Servicio encargado de administrar las colecciones de productos, clientes y ventas, junto con las
+    operaciones de registro, busqueda, actualizacion, eliminacion, listado y venta del sistema.
+    PRINCIPIO SRP: maneja exclusivamente la logica de almacenamiento y validacion en memoria, cumpliendo con
+    la restriccion de NO interactuar con la consola (sin inputs ni prints) y de NO leer/escribir archivos
+    directamente (eso es responsabilidad de ArchivoServicio).
 
-    MEJORA SEMANA 11: se agrega self._ventas, una tercera coleccion que representa la relacion real entre un Cliente (Usuario) y un 
-    Producto vendido, ademas de la operacion vender_producto() y la consulta de ventas por cliente.
+    MEJORA SEMANA 11: se agrega self._ventas, una tercera coleccion que representa la relacion real entre
+    un Cliente (Usuario) y un Producto vendido, ademas de la operacion vender_producto() y la consulta de
+    ventas por cliente.
     """
 
     def __init__(
@@ -21,11 +23,11 @@ class Restaurante:
         ventas_iniciales: list[Venta] | None = None,
     ) -> None:
         # LISTA (list):
-        # self._productos guarda de manera conjunta Producto y su subclase Bebida (gracias al polimorfismo). elf._clientes guarda 
-        # objetos Cliente, que en este proyecto cumplen el rol de "Usuario" que se relaciona con Producto mediante Venta. 
-        # self._ventas guarda la coleccion de relaciones ya concretadas (MEJORA SEMANA 11). Las tres listas son privadas: 
-        # main.py nunca las recorre ni las modifica directamente, solo a traves de los metodos publicos de esta clase.
-
+        # self._productos guarda de manera conjunta Producto y su subclase Bebida (gracias al polimorfismo).
+        # self._clientes guarda objetos Cliente, que en este proyecto cumplen el rol de "Usuario" que se
+        # relaciona con Producto mediante Venta. self._ventas guarda la coleccion de relaciones ya
+        # concretadas (MEJORA SEMANA 11). Las tres listas son privadas: main.py nunca las recorre ni las
+        # modifica directamente, solo a traves de los metodos publicos de esta clase.
         self._productos: list[Producto] = (
             productos_iniciales.copy() if productos_iniciales else []
         )
@@ -39,14 +41,16 @@ class Restaurante:
     # -----------------------------------------------------------------
     def cargar_productos(self, productos: list[Producto]) -> None:
         """
-        Reemplaza la coleccion en memoria por los productos recuperados desde datos/productos.json (ya convertidos a objetos Producto/Bebida 
-        por ArchivoServicio). Se utiliza al iniciar main.py, antes de mostrar el menu.
+        Reemplaza la coleccion en memoria por los productos recuperados desde datos/productos.json
+        (ya convertidos a objetos Producto/Bebida por ArchivoServicio). Se utiliza al iniciar main.py,
+        antes de mostrar el menu.
         """
         self._productos = productos.copy()
 
     def registrar_producto(self, producto: Producto) -> str:
         """
-        Registro de productos y evitar codigos de productos duplicados. Uso de LISTA: agrega el nuevo producto mediante list.append().
+        Registro de productos y evitar codigos de productos duplicados. Uso de LISTA: agrega el nuevo
+        producto mediante list.append().
         """
         if self.buscar_producto_por_codigo(producto.codigo) is not None:
             return f"Error: Ya existe un producto con el codigo {producto.codigo}."
@@ -55,8 +59,8 @@ class Restaurante:
 
     def buscar_producto_por_codigo(self, codigo: str) -> Producto | None:
         """
-        Implementa la busqueda de productos utilizando un criterio coherente como su codigo. Uso de LISTA: recorre self._productos 
-        con un for para localizar el elemento buscado.
+        Implementa la busqueda de productos utilizando un criterio coherente como su codigo.
+        Uso de LISTA: recorre self._productos con un for para localizar el elemento buscado.
         """
         codigo = codigo.strip()
         for producto in self._productos:
@@ -73,9 +77,9 @@ class Restaurante:
         stock: int | None = None,
     ) -> str:
         """
-        Implementa la actualizacion de productos. Localiza el producto dentro de la LISTA self._productos (a traves de 
-        buscar_producto_por_codigo) y modifica sus atributos mediante los setters expuestos por Producto (que conservan sus 
-        validaciones, incluida la del stock desde la Semana 11).
+        Implementa la actualizacion de productos. Localiza el producto dentro de la LISTA self._productos
+        (a traves de buscar_producto_por_codigo) y modifica sus atributos mediante los setters expuestos
+        por Producto (que conservan sus validaciones, incluida la del stock desde la Semana 11).
         """
         producto = self.buscar_producto_por_codigo(codigo)
         if producto is None:
@@ -92,7 +96,8 @@ class Restaurante:
 
     def eliminar_producto(self, codigo: str) -> str:
         """
-        Implementa la eliminacion de productos. Uso de LISTA: elimina el elemento localizado mediante list.remove().
+        Implementa la eliminacion de productos. Uso de LISTA: elimina el elemento localizado mediante
+        list.remove().
         """
         producto = self.buscar_producto_por_codigo(codigo)
         if producto is None:
@@ -102,16 +107,17 @@ class Restaurante:
 
     def listar_productos(self) -> list[str]:
         """
-        Implementa el listado de productos. Uso de LISTA: recorre self._productos con comprension de lista. PRINCIPIO LSP & POLIMORFISMO: 
-        invoca mostrar_informacion() de forma transparente para Productos y Bebidas, sin usar isinstance().
+        Implementa el listado de productos. Uso de LISTA: recorre self._productos con comprension de lista.
+        PRINCIPIO LSP & POLIMORFISMO: invoca mostrar_informacion() de forma transparente para Productos
+        y Bebidas, sin usar isinstance().
         """
         return [producto.mostrar_informacion() for producto in self._productos]
 
     def obtener_productos(self) -> list[Producto]:
         """
-        Entrega una copia de la coleccion de objetos Producto (no diccionarios) para que ArchivoServicio pueda convertirla a JSON y 
-        guardarla. Se devuelve una copia para que quien llama no pueda alterar la lista interna directamente (se respeta el 
-        encapsulamiento).
+        Entrega una copia de la coleccion de objetos Producto (no diccionarios) para que ArchivoServicio
+        pueda convertirla a JSON y guardarla. Se devuelve una copia para que quien llama no pueda alterar
+        la lista interna directamente (se respeta el encapsulamiento).
         """
         return self._productos.copy()
 
@@ -120,8 +126,8 @@ class Restaurante:
 
     def obtener_categorias_unicas(self) -> set[str]:
         """
-        CONJUNTO (set): se utiliza para obtener informacion que debe mostrarse sin elementos duplicados, por ejemplo las categorias 
-        unicas de los productos registrados.
+        CONJUNTO (set): se utiliza para obtener informacion que debe mostrarse sin elementos duplicados,
+        por ejemplo las categorias unicas de los productos registrados.
         """
         categorias: set[str] = set()
         for producto in self._productos:
@@ -133,13 +139,15 @@ class Restaurante:
     # -----------------------------------------------------------------
     def cargar_clientes(self, clientes: list[Cliente]) -> None:
         """
-        MEJORA SEMANA 11: restaura la coleccion de clientes recuperada desde usuarios.json al iniciar el programa, igual que ya se hacia con los productos.
+        MEJORA SEMANA 11: restaura la coleccion de clientes recuperada desde usuarios.json
+        al iniciar el programa, igual que ya se hacia con los productos.
         """
         self._clientes = clientes.copy()
 
     def registrar_cliente(self, cliente: Cliente) -> str:
         """
-        Permite el registro de clientes y evita identificaciones duplicadas. Uso de LISTA: agrega el nuevo cliente mediante list.append().
+        Permite el registro de clientes y evita identificaciones duplicadas. Uso de LISTA: agrega el nuevo
+        cliente mediante list.append().
         """
         if self.buscar_cliente_por_identificacion(cliente.identificacion) is not None:
             return (
@@ -150,9 +158,9 @@ class Restaurante:
         return f'El cliente "{cliente.nombre}" fue registrado exitosamente.'
 
     def buscar_cliente_por_identificacion(self, identificacion: str) -> Cliente | None:
-        # Uso de LISTA: recorre self._clientes con un for para localizar el cliente buscado. Se hace publico (Semana 11) porque 
-        # vender_producto() necesita validar que el usuario que compra realmente exista.
-
+        # Uso de LISTA: recorre self._clientes con un for para localizar el cliente buscado.
+        # Se hace publico (Semana 11) porque vender_producto() necesita validar que el
+        # usuario que compra realmente exista.
         identificacion = identificacion.strip()
         for cliente in self._clientes:
             if cliente.identificacion == identificacion:
@@ -167,7 +175,8 @@ class Restaurante:
 
     def obtener_clientes(self) -> list[Cliente]:
         """
-        MEJORA SEMANA 11: entrega una copia de la coleccion de objetos Cliente para que ArchivoServicio pueda guardarla en usuarios.json.
+        MEJORA SEMANA 11: entrega una copia de la coleccion de objetos Cliente para que
+        ArchivoServicio pueda guardarla en usuarios.json.
         """
         return self._clientes.copy()
 
@@ -185,8 +194,8 @@ class Restaurante:
         cantidad: int,
     ) -> bool:
         """
-        Operacion central de la Semana 11: relaciona a un Cliente (Usuario) con un Producto mediante una Venta, controla el stock 
-        disponible y lo disminuye solo cuando la operacion es valida.
+        Operacion central de la Semana 11: relaciona a un Cliente (Usuario) con un Producto mediante
+        una Venta, controla el stock disponible y lo disminuye solo cuando la operacion es valida.
 
         Reglas de negocio verificadas antes de crear la relacion:
         - Que el usuario (cliente) exista.
@@ -213,8 +222,8 @@ class Restaurante:
 
     def consultar_ventas_cliente(self, identificacion_cliente: str) -> list[Venta]:
         """
-        Consulta que demuestra el uso de colecciones para recorrer, comparar y filtrar objetos: retorna unicamente las ventas asociadas 
-        a un cliente (usuario) especifico.
+        Consulta que demuestra el uso de colecciones para recorrer, comparar y filtrar objetos:
+        retorna unicamente las ventas asociadas a un cliente (usuario) especifico.
         """
         identificacion_cliente = identificacion_cliente.strip()
         ventas_cliente: list[Venta] = []
@@ -228,7 +237,8 @@ class Restaurante:
 
     def obtener_ventas(self) -> list[Venta]:
         """
-        MEJORA SEMANA 11: entrega una copia de la coleccion de objetos Venta para que ArchivoServicio pueda guardarla en ventas.json.
+        MEJORA SEMANA 11: entrega una copia de la coleccion de objetos Venta para que
+        ArchivoServicio pueda guardarla en ventas.json.
         """
         return self._ventas.copy()
 

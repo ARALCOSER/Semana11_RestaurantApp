@@ -5,7 +5,7 @@
         "nombre": "Sopa de camaron",
         "categoria": "sopa",
         "precio": 3.5,
-        "stock": 3
+        "stock": 2
     },
     {
         "tipo": "producto",
